@@ -16,16 +16,46 @@ namespace SimpleModernVideoPlayer
     public class UserSettings
     {
         // 设置存储
-        static Windows.Storage.ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
-        static Windows.Storage.StorageFolder localFolder = Windows.Storage.ApplicationData.Current.LocalFolder;
+        Windows.Storage.ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
+        Windows.Storage.StorageFolder localFolder = Windows.Storage.ApplicationData.Current.LocalFolder;
 
-        public static string _userName { get { return localSettings.Values["UserName"].ToString(); } }
-        public static BitmapImage _userAvatar { get { return getUserAvatar().Result; } }
-        public static string _userPwd { get { return localSettings.Values["UserPwd"].ToString(); } }
-        public static bool _isLoggedIn { get { return bool.Parse(localSettings.Values["IsLoggedIn"].ToString()); } }
-        public static string _localfolder { get { return localFolder.Path; } }
+        public string _userName
+        {
+            get
+            {
+                if (_isLoggedIn == false)
+                {
+                    return "未登录";
+                }
+                else
+                {
+                    return localSettings.Values["UserName"].ToString();
+                }
+            }
+        }
+        public BitmapImage _userAvatar
+        {
+            get
+            {
+                return getUserAvatar().Result;
+            }
+        }
+        public string _userPwd { get { return localSettings.Values["UserPwd"].ToString(); } }
+        public bool _isLoggedIn
+        {
+            get
+            {
+                return bool.Parse(localSettings.Values["IsLoggedIn"].ToString());
+            }
+            set
+            {
+                localSettings.Values["IsLoggedIn"] = value;
+                //this.RaisePropertyChange("_isLoggedIn");
+            }
+        }
+        public string _localfolder { get { return localFolder.Path; } }
 
-        private static async Task<BitmapImage> getUserAvatar()
+        private async Task<BitmapImage> getUserAvatar()
         {
             try
             {
@@ -43,14 +73,14 @@ namespace SimpleModernVideoPlayer
             }
         }
 
-        public static void setExample()
+        public void setExample()
         {
             localSettings.Values["UserName"] = "Vinnocent";
             localSettings.Values["UserPwd"] = "123456";
-            localSettings.Values["IsLoggedIn"] = false;
+            localSettings.Values["IsLoggedIn"] = true;
         }
 
-        public static async void saveThubnail(WriteableBitmap bitmapImage,string filename)
+        public async void saveThubnail(WriteableBitmap bitmapImage, string filename)
         {
             StorageFile thumbFile = await localFolder.CreateFileAsync(filename, CreationCollisionOption.ReplaceExisting);
             Guid bitmapEncoderGuid = BitmapEncoder.JpegEncoderId;

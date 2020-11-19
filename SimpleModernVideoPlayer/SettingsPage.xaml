@@ -8,7 +8,38 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <Grid>
-        <TextBlock>Settings</TextBlock>
+    <Grid PointerMoved="Grid_MouseMove" PointerExited="Grid_MouseLeave">
+        <Canvas Name="cvs_particleContainer"/>
+        <Grid  Name="grid_lineContainer"/>
+        <Grid>
+            <Grid.Background>
+                <ImageBrush ImageSource="Assets/460.png" Stretch="Fill" Opacity="0.2"/>
+            </Grid.Background>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="{Binding qpHeight}"/>
+                <RowDefinition Height="200"/>
+                <RowDefinition Height="100"/>
+                <RowDefinition Height="150"/>
+                <RowDefinition Height="150"/>
+                <RowDefinition Height="{Binding qpHeight}"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="{Binding qpWidth}"/>
+                <ColumnDefinition Width="300"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="300"/>
+                <ColumnDefinition Width="150"/>
+                <ColumnDefinition Width="300"/>
+                <ColumnDefinition Width="{Binding qpWidth}"/>
+            </Grid.ColumnDefinitions>
+            <PersonPicture Grid.Column="3" Grid.Row="1" x:Name="userAvatarSetting"/>
+            <TextBlock Grid.Column="3" Grid.Row="2" FontSize="30" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" x:Name="userNameSetting"/>
+            <TextBlock x:Name="tb1" Grid.Column="1" Grid.Row="3" FontSize="20" Text="User Name:" Margin="0,0,10,0" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+            <TextBlock x:Name="tb2" Grid.Column="1" Grid.Row="4" FontSize="20" Text="Password:" Margin="0,0,10,0" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+            <TextBox Height="35" Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="3" x:Name="userNameBox"/>
+            <TextBox Height="35" Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="4" x:Name="userPwdBox"/>
+            <Button Grid.Column="5" Height="50" Width="100" CornerRadius="6" Content="Log in" FontSize="20" Grid.ColumnSpan="1" Grid.Row="4" x:Name="loginBtn" Click="logIn_Clicked"/>
+            <Button Grid.Column="3" Grid.Row="3" Grid.RowSpan="2" Height="50" Width="100" CornerRadius="6" Content="Log out" FontSize="20" x:Name="logoutBtn" HorizontalAlignment="Center" VerticalAlignment="Center" Click="logOut_Clicked"/>
+        </Grid>
     </Grid>
 </Page>

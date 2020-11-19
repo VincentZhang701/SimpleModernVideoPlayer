@@ -132,6 +132,7 @@
     <Compile Include="musicplayerpage.xaml.cs">
       <DependentUpon>musicplayerpage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="NotificationObject.cs" />
     <Compile Include="Particle.cs" />
     <Compile Include="ParticleSystem.cs" />
     <Compile Include="PlaylistControl.cs" />

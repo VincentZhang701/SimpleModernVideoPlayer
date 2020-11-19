@@ -27,11 +27,11 @@
                             <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE8B2;"/>
                         </NavigationViewItem.Icon>
                     </NavigationViewItem>
-                    <NavigationViewItem Tag="musicplayer" Content="Music Player">
+                    <!--<NavigationViewItem Tag="musicplayer" Content="Music Player">
                         <NavigationViewItem.Icon>
                             <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xEC4F;"/>
                         </NavigationViewItem.Icon>
-                    </NavigationViewItem>
+                    </NavigationViewItem>-->
                 </NavigationView.MenuItems>
 
                 <NavigationView.AutoSuggestBox>

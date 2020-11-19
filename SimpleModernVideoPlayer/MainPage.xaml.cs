@@ -22,6 +22,9 @@ namespace SimpleModernVideoPlayer
     /// </summary>
     public sealed partial class MainPage : Page
     {
+        public static MainPage Current;
+        public static UserSettings userSettings;
+
         // 页面列表
         private readonly List<(string Tag, Type Page)> _pages = new List<(string Tag, Type Page)>
         {
@@ -37,19 +40,19 @@ namespace SimpleModernVideoPlayer
         public MainPage()
         {
             this.InitializeComponent();
-            UserSettings.setExample();
+            //UserSettings.setExample()
+            Current = this;
+            userSettings = new UserSettings();
+            logStateChanged();
+        }
 
-            if (UserSettings._isLoggedIn == false)
-            {
-                string a = "未登录";
-                userNameMain.SetBinding(TextBlock.TextProperty, new Binding() { Source = a });
-            }
-            else
-            {
-                userNameMain.SetBinding(TextBlock.TextProperty, new Binding() { Source = UserSettings._userName });
-            }
-            
-            userAvatarMain.SetBinding(PersonPicture.ProfilePictureProperty, new Binding() { Source = UserSettings._userAvatar });
+        public void logStateChanged()
+        {
+
+            userNameMain.ClearValue(TextBlock.TextProperty);
+            userNameMain.SetBinding(TextBlock.TextProperty, new Binding() { Source = userSettings._userName });
+
+            userAvatarMain.SetBinding(PersonPicture.ProfilePictureProperty, new Binding() { Source = userSettings._userAvatar });
         }
 
         /// <summary>
@@ -248,7 +251,7 @@ namespace SimpleModernVideoPlayer
 
         private void accoutItem_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            NavView_Navigate(((NavigationViewItem)sender).Tag.ToString(), new EntranceNavigationTransitionInfo());
+            //NavView_Navigate(((NavigationViewItem)sender).Tag.ToString(), new EntranceNavigationTransitionInfo());
         }
     }
 }
