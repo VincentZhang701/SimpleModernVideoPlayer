@@ -13,34 +13,53 @@ using Windows.UI.Xaml.Media.Imaging;
 
 namespace SimpleModernVideoPlayer
 {
-    public class UserSettings
+    public class UserSettings:NotificationObject
     {
         // 设置存储
         Windows.Storage.ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
         Windows.Storage.StorageFolder localFolder = Windows.Storage.ApplicationData.Current.LocalFolder;
 
+        //用户名
         public string _userName
         {
             get
             {
-                if (_isLoggedIn == false)
-                {
-                    return "未登录";
-                }
-                else
-                {
-                    return localSettings.Values["UserName"].ToString();
-                }
+                return localSettings.Values["UserName"].ToString();
+
+            }
+            set
+            {
+                localSettings.Values["UserName"] = value;
+                this.RaisePropertyChange("_userName");
             }
         }
+        //用户头像
         public BitmapImage _userAvatar
         {
             get
             {
                 return getUserAvatar().Result;
             }
+            set
+            {
+                //Implementing
+                this.RaisePropertyChange("_userAvatar");
+            }
         }
-        public string _userPwd { get { return localSettings.Values["UserPwd"].ToString(); } }
+        //用户密码
+        public string _userPwd
+        {
+            get
+            {
+                return localSettings.Values["UserPwd"].ToString();
+            }
+            set
+            {
+                localSettings.Values["UserPwd"] = value;
+                this.RaisePropertyChange("_userName");
+            }
+        }
+        //是否已经登陆
         public bool _isLoggedIn
         {
             get
@@ -50,16 +69,22 @@ namespace SimpleModernVideoPlayer
             set
             {
                 localSettings.Values["IsLoggedIn"] = value;
-                //this.RaisePropertyChange("_isLoggedIn");
+                this.RaisePropertyChange("_isLoggedIn");
             }
         }
+        //设置存储
         public string _localfolder { get { return localFolder.Path; } }
-
+        
+        /// <summary>
+        /// 从设置存储获得用户头像
+        /// </summary>
+        /// <param name="userName">用户名</param>
+        /// <returns>用户头像的Bitmap</returns>
         private async Task<BitmapImage> getUserAvatar()
         {
             try
             {
-                StorageFile userAvatar = await localFolder.GetFileAsync("UserAvatar.jpg");
+                StorageFile userAvatar = await localFolder.GetFileAsync("Uimg.jpg");
                 using (var randomAccessStream = await userAvatar.OpenAsync(FileAccessMode.Read))
                 {
                     var result = new BitmapImage();
@@ -73,6 +98,7 @@ namespace SimpleModernVideoPlayer
             }
         }
 
+        //测试用
         public void setExample()
         {
             localSettings.Values["UserName"] = "Vinnocent";

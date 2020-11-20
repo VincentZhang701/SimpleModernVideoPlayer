@@ -32,8 +32,8 @@
                 <ColumnDefinition Width="300"/>
                 <ColumnDefinition Width="{Binding qpWidth}"/>
             </Grid.ColumnDefinitions>
-            <PersonPicture Grid.Column="3" Grid.Row="1" x:Name="userAvatarSetting"/>
-            <TextBlock Grid.Column="3" Grid.Row="2" FontSize="30" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" x:Name="userNameSetting"/>
+            <PersonPicture Grid.Column="3" Grid.Row="1" x:Name="userAvatarSetting" ProfilePicture="{Binding _userAvatar}"/>
+            <TextBlock Grid.Column="3" Grid.Row="2" FontSize="30" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" x:Name="userNameSetting" Text="{Binding _userName}"/>
             <TextBlock x:Name="tb1" Grid.Column="1" Grid.Row="3" FontSize="20" Text="User Name:" Margin="0,0,10,0" VerticalAlignment="Center" HorizontalAlignment="Right"/>
             <TextBlock x:Name="tb2" Grid.Column="1" Grid.Row="4" FontSize="20" Text="Password:" Margin="0,0,10,0" VerticalAlignment="Center" HorizontalAlignment="Right"/>
             <TextBox Height="35" Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="3" x:Name="userNameBox"/>

@@ -21,6 +21,8 @@ namespace SimpleModernVideoPlayer
     /// </summary>
     public sealed partial class SettingsPage : Page
     {
+        private double qpHeight { get { return this.Height / 6; } }
+        private double qpWidth { get { return this.Width / 6; } }
         private MainPage rootPage = MainPage.Current;
         private ParticleSystem ps;
         private Point pMouse = new Point(9999, 9999);
@@ -28,20 +30,19 @@ namespace SimpleModernVideoPlayer
         {
             this.InitializeComponent();
             this.Loaded += MainWindow_Loaded;
-            userNameSetting.SetBinding(TextBlock.TextProperty, new Binding() { Source = MainPage.userSettings._userName,Mode=BindingMode.OneWay });
-            
+
+            this.userAvatarSetting.DataContext = MainPage.userSettings;
+            this.userNameSetting.DataContext = MainPage.userSettings;
             logStateChangedSetting();
         }
 
+        /// <summary>
+        /// 改变控件可见性
+        /// </summary>
         void logStateChangedSetting()
         {
-            Thread.Sleep(1000);
-            rootPage.logStateChanged();
-            Thread.Sleep(1000);
             if (MainPage.userSettings._isLoggedIn == false)
             {
-                userNameSetting.ClearValue(TextBlock.TextProperty);
-                userNameSetting.SetBinding(TextBlock.TextProperty, new Binding() { Source = MainPage.userSettings._userName, Mode = BindingMode.OneWay });
                 userNameBox.Visibility = Visibility.Visible;
                 userPwdBox.Visibility = Visibility.Visible;
                 loginBtn.Visibility = Visibility.Visible;
@@ -51,8 +52,6 @@ namespace SimpleModernVideoPlayer
             }
             else
             {
-                userNameSetting.ClearValue(TextBlock.TextProperty);
-                userNameSetting.SetBinding(TextBlock.TextProperty, new Binding() { Source = MainPage.userSettings._userName, Mode = BindingMode.OneWay });
                 userNameBox.Visibility = Visibility.Collapsed;
                 userPwdBox.Visibility = Visibility.Collapsed;
                 loginBtn.Visibility = Visibility.Collapsed;
@@ -60,8 +59,6 @@ namespace SimpleModernVideoPlayer
                 tb2.Visibility = Visibility.Collapsed;
                 logoutBtn.Visibility = Visibility.Visible;
             }
-            userAvatarSetting.SetBinding(PersonPicture.ProfilePictureProperty, new Binding() { Source = MainPage.userSettings._userAvatar, Mode = BindingMode.OneWay });
-
         }
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
@@ -95,12 +92,14 @@ namespace SimpleModernVideoPlayer
         private void logOut_Clicked(object sender, RoutedEventArgs e)
         {
             MainPage.userSettings._isLoggedIn = false;
+            MainPage.userSettings._userName = "未登录";
             logStateChangedSetting();
         }
 
         private void logIn_Clicked(object sender, RoutedEventArgs e)
         {
             MainPage.userSettings._isLoggedIn = true;
+            MainPage.userSettings._userName = "vinnocent";
             logStateChangedSetting();
         }
     }

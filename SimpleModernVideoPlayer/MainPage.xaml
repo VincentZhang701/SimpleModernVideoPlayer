@@ -49,8 +49,8 @@
                                         <ColumnDefinition Width="Auto"/>
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
-                                    <PersonPicture x:Name="userAvatarMain" Width="25" Height="25" Margin="0,0,15,0" />
-                                    <TextBlock x:Name="userNameMain" Grid.Column="1"></TextBlock>
+                                    <PersonPicture x:Name="userAvatarMain" Width="25" Height="25" Margin="0,0,15,0" ProfilePicture="{Binding _userAvatar}"/>
+                                    <TextBlock x:Name="userNameMain" Grid.Column="1" Text="{Binding _userName}"/>
                                 </Grid>
                             </NavigationViewItem.Content>
                         </NavigationViewItem>

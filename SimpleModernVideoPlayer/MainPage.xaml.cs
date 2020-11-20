@@ -43,16 +43,9 @@ namespace SimpleModernVideoPlayer
             //UserSettings.setExample()
             Current = this;
             userSettings = new UserSettings();
-            logStateChanged();
-        }
 
-        public void logStateChanged()
-        {
-
-            userNameMain.ClearValue(TextBlock.TextProperty);
-            userNameMain.SetBinding(TextBlock.TextProperty, new Binding() { Source = userSettings._userName });
-
-            userAvatarMain.SetBinding(PersonPicture.ProfilePictureProperty, new Binding() { Source = userSettings._userAvatar });
+            this.userNameMain.DataContext = userSettings;
+            this.userAvatarMain.DataContext = userSettings;
         }
 
         /// <summary>
