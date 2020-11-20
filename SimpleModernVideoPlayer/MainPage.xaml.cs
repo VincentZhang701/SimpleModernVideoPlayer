@@ -1,4 +1,6 @@
-﻿using System;
+﻿using SimpleModernVideoPlayer.Domain;
+using SimpleModernVideoPlayer.Service;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -12,6 +14,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
+using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 
 
@@ -43,9 +46,30 @@ namespace SimpleModernVideoPlayer
             //UserSettings.setExample()
             Current = this;
             userSettings = new UserSettings();
-
+            initAvatar();
+            
             this.userNameMain.DataContext = userSettings;
             this.userAvatarMain.DataContext = userSettings;
+        }
+
+        private async void initAvatar()
+        {
+            if (userSettings._isLoggedIn == true)
+            {
+                User user = RESTClient.GetUserByInfo(new Info() { name = userSettings._userName });
+                if (user.avatar == "Default")
+                {
+                    MainPage.userSettings._userAvatar = new BitmapImage(new Uri("ms-appx:///Assets/130-512.png"));
+                    return;
+                }
+                byte[] buf = Convert.FromBase64String(user.avatar);
+                ImageSource imageSource = await Utils.PhotoConverter.SaveToImageSource(buf);
+                userSettings._userAvatar = imageSource;
+            }
+            else
+            {
+                MainPage.userSettings._userAvatar = new BitmapImage(new Uri("ms-appx:///Assets/130-512.png"));
+            }
         }
 
         /// <summary>

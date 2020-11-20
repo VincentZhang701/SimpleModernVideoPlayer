@@ -1,4 +1,6 @@
-﻿using System;
+﻿using SimpleModernVideoPlayer.Domain;
+using SimpleModernVideoPlayer.Service;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -36,6 +38,10 @@ namespace SimpleModernVideoPlayer
 
         //保存变量
         private static ItemsControl pVLis = new ItemsControl();
+
+        private MainPage rootPage = MainPage.Current;
+
+        private static string CurrentItem = "";
 
         //构造函数
         public videoplayerpage()
@@ -117,6 +123,7 @@ namespace SimpleModernVideoPlayer
                 // 媒体对象
                 MediaModel media = new MediaModel(file)
                 {
+                    canSync=true,
                     Title = file.Name,
                     ArtUri = writeableBitmap,
                     PlaybackPosition = TimeSpan.Parse("00:00:00"),
@@ -135,7 +142,11 @@ namespace SimpleModernVideoPlayer
         private void playlist_Clicked(object sender, ItemClickEventArgs e)
         {
             var item = e.ClickedItem as MediaModel;
+            CurrentItem = item.Title;
+            Debug.WriteLine(CurrentItem);
+            mp.Position = item.PlaybackPosition;
 
+            // Start the background task if it wasn't running
             playbackList.MoveTo((uint)playbackList.Items.IndexOf(item.MediaPlaybackItem));
 
             if (MediaPlaybackState.Paused == mp.PlaybackSession.PlaybackState)
@@ -193,6 +204,89 @@ namespace SimpleModernVideoPlayer
             {
                 this.splitView.IsPaneOpen = true;
             }
+        }
+
+        private void upPlay_Click(object sender, RoutedEventArgs e)
+        {
+            List<Record> recordList = new List<Record>();
+            if (playlistView.Items.Count == 0)
+            {
+                recordList.Add(new Record() { UID = int.Parse(MainPage.userSettings._userID), videoname = "#####" });
+            }
+            else
+            {
+                foreach (MediaModel mediaModel in playlistView.Items)
+                {
+                    if (mediaModel.canSync)
+                    {
+                        Record record = new Record()
+                        {
+                            bytes = 123,
+                            UID = int.Parse(MainPage.userSettings._userID),
+                            videoname = mediaModel.Title,
+                            LastOpened = DateTime.Now.ToString(),
+                            location = "LibraryVideo",
+                            record = mediaModel.PlaybackPosition.ToString()
+                        };
+                        recordList.Add(record);
+                    }
+                }
+            }
+            
+            RESTClient.UpdateRecordList(recordList);
+        }
+
+        private async void downPlay_Click(object sender, RoutedEventArgs e)
+        {
+            List<Record> recordList = RESTClient.GetRecordByID(int.Parse(MainPage.userSettings._userID));
+            if (playbackList.Items.Count != 0)
+            {
+                delPlay_Click(this, null);
+            }
+            foreach (Record record in recordList)
+            {
+
+
+
+                StorageFolder storageFolder = KnownFolders.VideosLibrary;
+                StorageFile file = await storageFolder.GetFileAsync(record.videoname);
+
+                var thumbnail = await file.GetScaledImageAsThumbnailAsync(ThumbnailMode.VideosView);
+                WriteableBitmap writeableBitmap = new WriteableBitmap(100, 64);
+                InMemoryRandomAccessStream randomAccessStream = new InMemoryRandomAccessStream();
+                await RandomAccessStream.CopyAsync(thumbnail, randomAccessStream);
+                randomAccessStream.Seek(0);
+                writeableBitmap.SetSource(randomAccessStream);
+
+                MediaModel media = new MediaModel(file)
+                {
+
+                    Title = file.Name,
+                    ArtUri = writeableBitmap,
+                    PlaybackPosition = TimeSpan.Parse(record.record),
+                    PlaybackHistory = DateTime.Parse(record.LastOpened)
+                };
+                pVLis.Items.Add(media);
+                playbackList.Items.Add(media.MediaPlaybackItem);
+            }
+
+        }
+
+        private void savePlay_Click(object sender, RoutedEventArgs e)
+        {
+            int index = 0;
+            int cindex = 0;
+            foreach(var o in pVLis.Items)
+            {
+                MediaModel mediaModel = o as MediaModel;
+                if (mediaModel.Title == CurrentItem)
+                {
+                    cindex = index;
+                }
+                index++;
+            }
+            MediaModel model = pVLis.Items[cindex] as MediaModel;
+            model.PlaybackPosition = mp.PlaybackSession.Position;
         }
     }
 }

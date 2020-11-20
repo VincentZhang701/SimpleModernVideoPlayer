@@ -17,15 +17,18 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="90"/>
+                    <ColumnDefinition Width="75"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <StackPanel Orientation="Horizontal" Grid.Column="1">
-                    <AppBarButton Margin="5,10,5,10" Icon="Add" Width="35" Height="35" HorizontalAlignment="Right" VerticalAlignment="Top" Click="addPlay_Clicked"/>
-                    <AppBarButton Margin="5,10,5,10" Icon="Remove" Width="35" Height="35" HorizontalAlignment="Right" VerticalAlignment="Top" Click="removePlay_Clicked"/>
-                    <AppBarButton Margin="5,10,5,10" Icon="Delete" Width="35" Height="35" HorizontalAlignment="Right" VerticalAlignment="Top" Click="delPlay_Click"/>
+                    <AppBarButton Icon="Add" Width="30" Height="30" HorizontalAlignment="Right" VerticalAlignment="Top" Click="addPlay_Clicked"/>
+                    <AppBarButton Icon="Remove" Width="30" Height="30" HorizontalAlignment="Right" VerticalAlignment="Top" Click="removePlay_Clicked"/>
+                    <AppBarButton Icon="Delete" Width="30" Height="30" HorizontalAlignment="Right" VerticalAlignment="Top" Click="delPlay_Click"/>
+                    <AppBarButton Icon="Upload" Width="30" Height="30" HorizontalAlignment="Right" VerticalAlignment="Top" Click="upPlay_Click"/>
+                    <AppBarButton Icon="Download" Width="30" Height="30" HorizontalAlignment="Right" VerticalAlignment="Top" Click="downPlay_Click"/>
+                    <AppBarButton Icon="Save" Width="30" Height="30" HorizontalAlignment="Right" VerticalAlignment="Top" Click="savePlay_Click"/>
                 </StackPanel>
-                <TextBlock Text="Play Lists" x:Name="PaneHeader" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="16" Margin="10,10,10,10" Style="{StaticResource BaseTextBlockStyle}"/>
+                <TextBlock Text="Play Lists" x:Name="PaneHeader" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="13" Margin="10,10,10,10" Style="{StaticResource BaseTextBlockStyle}"/>
                 <ScrollViewer Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
                     <ListView x:Name="playlistView" IsItemClickEnabled="True" ItemClick="playlist_Clicked">
                         <ListView.ItemTemplate>

@@ -13,6 +13,11 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using SimpleModernVideoPlayer.Dao;
+using SimpleModernVideoPlayer.Domain;
+using SimpleModernVideoPlayer.Service;
+using SimpleModernVideoPlayer.Utils;
+using Windows.UI.Xaml.Media.Imaging;
 
 namespace SimpleModernVideoPlayer
 {
@@ -91,16 +96,82 @@ namespace SimpleModernVideoPlayer
 
         private void logOut_Clicked(object sender, RoutedEventArgs e)
         {
+            this.flyout1.Hide();
             MainPage.userSettings._isLoggedIn = false;
             MainPage.userSettings._userName = "未登录";
+            MainPage.userSettings._userAvatar = new BitmapImage(new Uri("ms-appx:///Assets/130-512.png"));
             logStateChangedSetting();
         }
 
-        private void logIn_Clicked(object sender, RoutedEventArgs e)
+        private async void logIn_Clicked(object sender, RoutedEventArgs e)
         {
-            MainPage.userSettings._isLoggedIn = true;
-            MainPage.userSettings._userName = "vinnocent";
-            logStateChangedSetting();
+            //校验格式
+            if (SimpleModernVideoPlayer.Utils.UserCheck.CheckUsername(this.userNameBox.Text) && SimpleModernVideoPlayer.Utils.UserCheck.CheckUserpswd(this.userPwdBox.Text))
+            {
+                User user = RESTClient.GetUserByInfo(new Info() { name = this.userNameBox.Text });
+                //校验成功
+                if (user.ID == 0)
+                {
+                    this.Conten_Create.Visibility = Visibility.Visible;
+                    await this.Conten_Create.ShowAsync();
+                }
+                else
+                {
+                    if (user.password==this.userPwdBox.Text)
+                    {
+                        MainPage.userSettings._isLoggedIn = true;
+                        MainPage.userSettings._userName = user.name;
+                        MainPage.userSettings._userID = user.ID.ToString();
+                        if (user.avatar == "Default")
+                        {
+                            MainPage.userSettings._userAvatar = new BitmapImage(new Uri("ms-appx:///Assets/130-512.png"));
+                            
+                        }
+                        else
+                        {
+                            byte[] buf = Convert.FromBase64String(user.avatar);
+                            ImageSource imageSource = await Utils.PhotoConverter.SaveToImageSource(buf);
+                            MainPage.userSettings._userAvatar = imageSource;
+                        }
+                        
+                       
+                        logStateChangedSetting();
+                        
+                    }
+                    else
+                    {
+                        this.contentDialog_passerr.Visibility = Visibility.Visible;
+                        await this.contentDialog_passerr.ShowAsync();
+                    }
+                }
+            }
+            else
+            {
+                contentDialog.Visibility = Visibility.Visible;
+                await contentDialog.ShowAsync();
+            }
+        }
+
+        private void cansel_Clicked(object sender, RoutedEventArgs e)
+        {
+            this.flyout1.Hide();
+        }
+
+        private void create_Clicked(object sender, ContentDialogButtonClickEventArgs e)
+        {
+            RESTClient.CreateUser(new User()
+            {
+                CreateTime = DateTime.Now.ToString(),
+                LastModifiedTime = DateTime.Now.ToString(),
+                name = this.userNameBox.Text,
+                password = this.userPwdBox.Text,
+                avatar="Default"
+            });
+        }
+
+        private void nocreate_Clicked(object sender, ContentDialogButtonClickEventArgs e)
+        {
+            //nothing
         }
     }
 }

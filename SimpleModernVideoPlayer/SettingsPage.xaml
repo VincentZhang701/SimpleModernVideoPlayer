@@ -39,7 +39,50 @@
             <TextBox Height="35" Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="3" x:Name="userNameBox"/>
             <TextBox Height="35" Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="4" x:Name="userPwdBox"/>
             <Button Grid.Column="5" Height="50" Width="100" CornerRadius="6" Content="Log in" FontSize="20" Grid.ColumnSpan="1" Grid.Row="4" x:Name="loginBtn" Click="logIn_Clicked"/>
-            <Button Grid.Column="3" Grid.Row="3" Grid.RowSpan="2" Height="50" Width="100" CornerRadius="6" Content="Log out" FontSize="20" x:Name="logoutBtn" HorizontalAlignment="Center" VerticalAlignment="Center" Click="logOut_Clicked"/>
+            <Button Grid.Column="3" Grid.Row="3" Grid.RowSpan="2" Height="50" Width="100" CornerRadius="6" Content="Log out" FontSize="20" x:Name="logoutBtn" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Button.Flyout>
+                    <Flyout x:Name="flyout1">
+                        <StackPanel>
+                            <TextBlock Style="{ThemeResource BaseTextBlockStyle}" Text="Sure to log OUT?" Margin="0,0,0,12" />
+                            <StackPanel Orientation="Horizontal">
+                                <Button Click="logOut_Clicked" Margin="0,0,10,0" Content="Yes" />
+                                <Button Click="cansel_Clicked" Content="Cancel"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Flyout>
+                </Button.Flyout>
+            </Button>
         </Grid>
+        <ContentDialog Title="Error"
+            CloseButtonText="Cancel"
+            DefaultButton="Primary" 
+            x:Name="contentDialog"
+            Visibility="Collapsed">
+            <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                <TextBlock Text="User name or password FORMAT error." TextWrapping="Wrap" />
+            </StackPanel>
+        </ContentDialog>
+        <ContentDialog Title="Error"
+            CloseButtonText="Cancel"
+            DefaultButton="Primary" 
+            x:Name="contentDialog_passerr"
+            Visibility="Collapsed">
+            <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                <TextBlock Text="User password error." TextWrapping="Wrap" />
+            </StackPanel>
+        </ContentDialog>
+        <ContentDialog Title="Info"
+                       PrimaryButtonText="Yes"
+                       CloseButtonText="Cancel"
+                       DefaultButton="Primary"
+                       PrimaryButtonClick="create_Clicked"
+                       CloseButtonClick="nocreate_Clicked"
+                       x:Name="Conten_Create"
+                       Visibility="Collapsed">
+            <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                <TextBlock Text="User NOT Exists. Want to create a new User?"
+            TextWrapping="Wrap" />
+            </StackPanel>
+        </ContentDialog>
     </Grid>
 </Page>

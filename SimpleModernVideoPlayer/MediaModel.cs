@@ -16,7 +16,7 @@ namespace SimpleModernVideoPlayer
         /// <summary>
         /// 构造函数
         /// </summary>
-        /// <param name="mediaUri">媒体地址</param>
+        /// <param name="sf">媒体地址</param>
         public MediaModel(StorageFile sf)
         {
             MediaPlaybackItem = new MediaPlaybackItem(MediaSource.CreateFromStorageFile(sf));
@@ -42,6 +42,8 @@ namespace SimpleModernVideoPlayer
         /// </summary>
         public DateTime PlaybackHistory { get; set; }
         public string sPlaybackHistory { get { return PlaybackHistory.Year + "/" + PlaybackHistory.Month + "/" + PlaybackHistory.Day; } }
+
+        public bool canSync { get; set; }
 
         /// <summary>
         /// 播放列表项目（使用构造URI初始化）

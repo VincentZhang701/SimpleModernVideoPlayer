@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -19,6 +20,20 @@ namespace SimpleModernVideoPlayer
         Windows.Storage.ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
         Windows.Storage.StorageFolder localFolder = Windows.Storage.ApplicationData.Current.LocalFolder;
 
+
+        //ID
+        public string _userID
+        {
+            get
+            {
+                return localSettings.Values["UserID"].ToString();
+            }
+            set
+            {
+                localSettings.Values["UserID"] = value;
+                this.RaisePropertyChange("_userID");
+            }
+        }
         //用户名
         public string _userName
         {
@@ -34,18 +49,8 @@ namespace SimpleModernVideoPlayer
             }
         }
         //用户头像
-        public BitmapImage _userAvatar
-        {
-            get
-            {
-                return getUserAvatar().Result;
-            }
-            set
-            {
-                //Implementing
-                this.RaisePropertyChange("_userAvatar");
-            }
-        }
+        public ImageSource _UserAvatar;
+        public ImageSource _userAvatar { get { return _UserAvatar; } set { _UserAvatar = value; this.RaisePropertyChange("_userAvatar"); } }
         //用户密码
         public string _userPwd
         {
@@ -74,39 +79,17 @@ namespace SimpleModernVideoPlayer
         }
         //设置存储
         public string _localfolder { get { return localFolder.Path; } }
-        
-        /// <summary>
-        /// 从设置存储获得用户头像
-        /// </summary>
-        /// <param name="userName">用户名</param>
-        /// <returns>用户头像的Bitmap</returns>
-        private async Task<BitmapImage> getUserAvatar()
-        {
-            try
-            {
-                StorageFile userAvatar = await localFolder.GetFileAsync("Uimg.jpg");
-                using (var randomAccessStream = await userAvatar.OpenAsync(FileAccessMode.Read))
-                {
-                    var result = new BitmapImage();
-                    await result.SetSourceAsync(randomAccessStream);
-                    return result;
-                }
-            }
-            catch (Exception)
-            {
-                return new BitmapImage(new Uri("ms-appx:///Assets/130-512.png"));
-            }
-        }
 
         //测试用
         public void setExample()
         {
+            localSettings.Values["UserID"] = "123456789";
             localSettings.Values["UserName"] = "Vinnocent";
             localSettings.Values["UserPwd"] = "123456";
             localSettings.Values["IsLoggedIn"] = true;
         }
 
-        public async void saveThubnail(WriteableBitmap bitmapImage, string filename)
+        public async void saveBitmapimage(WriteableBitmap bitmapImage, string filename)
         {
             StorageFile thumbFile = await localFolder.CreateFileAsync(filename, CreationCollisionOption.ReplaceExisting);
             Guid bitmapEncoderGuid = BitmapEncoder.JpegEncoderId;
